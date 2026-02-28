@@ -1,7 +1,8 @@
 package com.innowise.gatewayservice.service;
 
-import com.innowise.gatewayservice.exception.InvalidTokenException;
+import com.innowise.gatewayservice.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -12,7 +13,6 @@ import org.springframework.web.server.ServerWebExchange;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 
 @Service
 public class JWTService {
@@ -41,7 +41,9 @@ public class JWTService {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-        } catch (JwtException | IllegalArgumentException e){
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpiredException();
+        } catch (JwtException | IllegalArgumentException e) {
             return null;
         }
     }

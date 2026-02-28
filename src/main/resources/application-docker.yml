@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: GatewayService
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: ${USER_SERVICE_URL_DOCKER}
+              predicates:
+                - Path=/users/**,/cards/**
+                - Method=GET,POST,DELETE,UPDATE,PATCH
+            - id: authentication-service
+              uri: ${AUTH_SERVICE_URL}
+              predicates:
+                - Path=/auth/**
+                - Method=POST
+            - id: order-service
+              uri: ${ORDER_SERVICE_URL}
+              predicates:
+                - Path=/orders/**
+                - Method=GET,POST,PUT,DELETE,PATCH
+
+server:
+  port: 8080
+
+jwt:
+  access:
+    secret: ${JWT_SECRET}
+

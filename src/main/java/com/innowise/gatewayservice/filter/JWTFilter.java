@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
-
 @Component
 public class JWTFilter implements GlobalFilter {
     private final JWTService jwtService;
@@ -30,14 +26,13 @@ public class JWTFilter implements GlobalFilter {
         }
 
         String token = jwtService.resolveToken(exchange);
+        if (token == null){
+            throw new InvalidTokenException("Token is empty");
+        }
 
         Claims claims = jwtService.validateToken(token);
         if (claims == null) {
             throw new InvalidTokenException();
-        }
-
-        if (claims.getExpiration().before(new Date())){
-            throw new TokenExpiredException();
         }
 
         ServerWebExchange mutatedExchange = exchange.mutate().request(r -> r
