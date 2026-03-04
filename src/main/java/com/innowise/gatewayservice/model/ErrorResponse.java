@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class ErrorResponse implements Serializable {
+public class ErrorResponse {
     private String status;
     private HttpStatus code;
     private String message;
