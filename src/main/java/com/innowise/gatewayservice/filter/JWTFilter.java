@@ -12,9 +12,15 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 
 @Component
 public class JWTFilter implements WebFilter {
+    private static final List<String> PUBLIC_PATHS = List.of(
+            "/auth/login",
+            "/auth/registration",
+            "/auth/refresh");
     private final JWTService jwtService;
 
     public JWTFilter(JWTService jwtService) {
@@ -23,11 +29,11 @@ public class JWTFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String token = jwtService.resolveToken(exchange);
-
-        if (token == null) {
+        String path = exchange.getRequest().getPath().toString();
+        boolean isPublicPaths = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
+        if (isPublicPaths){
             return chain.filter(exchange);
         }
-
         try {
             Claims claims = jwtService.validateToken(token);
 

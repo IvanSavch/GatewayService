@@ -17,7 +17,9 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(ex -> ex.pathMatchers(HttpMethod.POST,"/auth/**").permitAll()
-                        .anyExchange().permitAll()).build();
+                .authorizeExchange(ex -> ex.pathMatchers(HttpMethod.POST,"/auth/login",
+                                "/auth/registration","/auth/refresh").permitAll()
+                        .anyExchange().authenticated())
+                .build();
     }
 }

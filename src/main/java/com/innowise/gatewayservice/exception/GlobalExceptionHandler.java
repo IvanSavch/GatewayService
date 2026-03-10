@@ -19,12 +19,13 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 @Component
+
 public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
     public GlobalExceptionHandler(ErrorAttributes errorAttributes,
-                                  WebProperties.Resources resources,
+                                  WebProperties webProperties,
                                   ApplicationContext applicationContext,
                                   ServerCodecConfigurer codecConfigurer) {
-        super(errorAttributes, resources, applicationContext);
+        super(errorAttributes, webProperties.getResources(), applicationContext);
 
         this.setMessageReaders(codecConfigurer.getReaders());
         this.setMessageWriters(codecConfigurer.getWriters());
@@ -48,18 +49,13 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
         ErrorResponse.ErrorResponseBuilder errorResponse = ErrorResponse.builder().path(request.path())
                 .timestamp(LocalDateTime.now());
 
-        if (ex instanceof InvalidTokenException invalidTokenException) {
+        if (ex instanceof InvalidTokenException || ex instanceof TokenExpiredException) {
             errorResponse.code(HttpStatus.UNAUTHORIZED);
             errorResponse.status(HttpStatus.UNAUTHORIZED.toString());
-            errorResponse.message(invalidTokenException.getMessage());
+            errorResponse.message(ex.getMessage());
             return errorResponse.build();
         }
-        if (ex instanceof TokenExpiredException tokenExpiredException) {
-            errorResponse.code(HttpStatus.UNAUTHORIZED);
-            errorResponse.status(HttpStatus.UNAUTHORIZED.toString());
-            errorResponse.message(tokenExpiredException.getMessage());
-            return errorResponse.build();
-        }
+
         return errorResponse.code(HttpStatus.INTERNAL_SERVER_ERROR)
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
                 .message("Internal server error").build();

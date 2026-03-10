@@ -1,5 +1,6 @@
 package com.innowise.gatewayservice.service;
 
+import com.innowise.gatewayservice.exception.InvalidTokenException;
 import com.innowise.gatewayservice.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -44,7 +45,7 @@ public class JWTService {
         } catch (ExpiredJwtException e) {
             throw new TokenExpiredException();
         } catch (JwtException | IllegalArgumentException e) {
-            return null;
+            throw new InvalidTokenException();
         }
     }
 }

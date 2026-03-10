@@ -10,7 +10,7 @@ spring:
               uri: http://localhost:8081
               predicates:
                 - Path=/users/**,/cards/**
-                - Method=GET,POST,DELETE,UPDATE,PATCH
+                - Method=GET,POST,DELETE,PUT,PATCH
             - id: authentication-service
               uri: http://localhost:8082
               predicates:
@@ -27,5 +27,5 @@ server:
 
 jwt:
   access:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_ACCESS_SECRET}
 

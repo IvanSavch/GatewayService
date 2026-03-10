@@ -10,7 +10,7 @@ spring:
               uri: ${USER_SERVICE_URL_DOCKER}
               predicates:
                 - Path=/users/**,/cards/**
-                - Method=GET,POST,DELETE,UPDATE,PATCH
+                - Method=GET,POST,DELETE,PUT,PATCH
             - id: authentication-service
               uri: ${AUTH_SERVICE_URL}
               predicates:
@@ -27,5 +27,5 @@ server:
 
 jwt:
   access:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_ACCESS_SECRET}
 

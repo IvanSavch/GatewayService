@@ -6,4 +6,4 @@ RUN mvn clean package -DskipTests
 
 FROM alpine/java:21-jre
 COPY --from=build /app/target/*.jar UserServiceApp.jar
-ENTRYPOINT ["java","-jar","UserServiceApp.jar"]
+ENTRYPOINT ["java","-jar"," GatewayService-0.0.1-SNAPSHOT.jar"]
