@@ -19,7 +19,7 @@ public class SecurityConfiguration {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(ex -> ex.pathMatchers(HttpMethod.POST,"/auth/login",
                                 "/auth/registration","/auth/refresh").permitAll()
-                        .anyExchange().authenticated())
+                        .anyExchange().permitAll())
                 .build();
     }
 }
