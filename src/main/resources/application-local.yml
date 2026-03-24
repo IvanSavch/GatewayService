@@ -21,6 +21,11 @@ spring:
               predicates:
                 - Path=/orders/**
                 - Method=GET,POST,PUT,DELETE,PATCH
+            - id: payment-service
+              uri: http://localhost:8084
+              predicates:
+                - Path=/payments/**
+                - Method=GET,POST,PUT,DELETE,PATCH
 
 server:
   port: 8080
